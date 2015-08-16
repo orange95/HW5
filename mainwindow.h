@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QTextCodec>
 #include <QDebug>
+#include <QFile>
+#include <QTextStream>
 
 namespace Ui {
 class MainWindow;
