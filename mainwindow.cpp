@@ -112,3 +112,41 @@ void MainWindow::updateTime()
     }
 }
 
+
+void MainWindow::on_Load_clicked()
+{
+    QString fileName;
+    fileName = QFileDialog::getOpenFileName(this, tr("Open Calendar"), "/home", tr("Calendar (*.txt)"));
+
+
+
+
+
+
+
+    QFile file(fileName);
+    if(file.open(QIODevice::ReadOnly)){
+        qDebug()<<"opening file";
+
+        QTextStream in(&file);
+        while (!in.atEnd()){
+            remindWhole = in.readLine();
+        }
+      }
+    else
+    {
+        qDebug()<<"Fail";
+    }
+
+    for(int i=0;i<11;i++)
+    {
+        remindTime[i]=remindWhole[i];
+    }
+    earlys[0]=remindWhole[11];
+    earlys[1]=remindWhole[12];
+    for(int i=13;i<remindWhole.size();i++)
+    {
+        remindThing[i-11]=remindWhole[i];
+    }
+    clock->start();
+}
