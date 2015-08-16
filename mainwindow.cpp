@@ -11,6 +11,8 @@
 #include "QList"
 
 QString remindTime;
+QString remindWhole;
+QString remindThing;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     clock = new QTimer;
-    clock ->setInterval(1000);
+    clock ->setInterval(30000);
     connect(clock,SIGNAL(timeout()),this,SLOT(updateTime()));
 
     codec = QTextCodec::codecForName("Big5");
@@ -51,9 +53,9 @@ void MainWindow::on_pushButton_clicked()
         out<<ui->hour1->currentItem()->text();
         out<<ui->hour2->currentItem()->text();
         out<<":";
-        out<<ui->minute->currentItem()->text()<<endl;
+        out<<ui->minute->currentItem()->text();
 //        out<<ui->remindMinute->currentItem()->text()<<endl;
-//        out<<ui->textEdit->toPlainText()<<endl;
+        out<<ui->textEdit->toPlainText()<<endl;
     }
 
     QFile file("Calendar.txt");
@@ -62,7 +64,7 @@ void MainWindow::on_pushButton_clicked()
 
         QTextStream in(&file);
         while (!in.atEnd()){
-            remindTime = in.readLine();
+            remindWhole = in.readLine();
         }
       }
     else
@@ -70,9 +72,16 @@ void MainWindow::on_pushButton_clicked()
         qDebug()<<"Fail";
     }
 
+    for(int i=0;i<11;i++)
+    {
+        remindTime[i]=remindWhole[i];
+    }
+    for(int i=11;i<remindWhole.size();i++)
+    {
+        remindThing[i-11]=remindWhole[i];
+    }
     clock->start();
 }
-
 
 void MainWindow::updateTime()
 {
@@ -83,7 +92,10 @@ void MainWindow::updateTime()
     {
         qDebug()<<"yes";
     qDebug()<<date.toString("MM:dd:hh:mm");
-    qDebug()<<remindTime;}
+    qDebug()<<remindTime;
+    ui->reminder->append(remindTime);
+    ui->reminder->append(remindThing);
+    }
     else
     {
         qDebug()<<"No";
