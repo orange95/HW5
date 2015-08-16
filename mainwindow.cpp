@@ -13,6 +13,7 @@
 QString remindTime;
 QString remindWhole;
 QString remindThing;
+QString earlys;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     clock = new QTimer;
-    clock ->setInterval(30000);
+    clock ->setInterval(1000);
     connect(clock,SIGNAL(timeout()),this,SLOT(updateTime()));
 
     codec = QTextCodec::codecForName("Big5");
@@ -54,7 +55,7 @@ void MainWindow::on_pushButton_clicked()
         out<<ui->hour2->currentItem()->text();
         out<<":";
         out<<ui->minute->currentItem()->text();
-//        out<<ui->remindMinute->currentItem()->text()<<endl;
+        out<<ui->remindMinute->currentItem()->text();
         out<<ui->textEdit->toPlainText()<<endl;
     }
 
@@ -76,7 +77,9 @@ void MainWindow::on_pushButton_clicked()
     {
         remindTime[i]=remindWhole[i];
     }
-    for(int i=11;i<remindWhole.size();i++)
+    earlys[0]=remindWhole[11];
+    earlys[1]=remindWhole[12];
+    for(int i=13;i<remindWhole.size();i++)
     {
         remindThing[i-11]=remindWhole[i];
     }
@@ -85,8 +88,12 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::updateTime()
 {
+    int earlyi=60*earlys.toInt();
+    QDateTime datenow;
     QDateTime date;
-    date = date.currentDateTime();
+    datenow = datenow.currentDateTime();
+    date = datenow.addSecs(earlyi);
+    qDebug()<<earlyi;
 
     if(date.toString("MM:dd:hh:mm") == remindTime)
     {
@@ -95,6 +102,7 @@ void MainWindow::updateTime()
     qDebug()<<remindTime;
     ui->reminder->append(remindTime);
     ui->reminder->append(remindThing);
+    clock->stop();
     }
     else
     {
