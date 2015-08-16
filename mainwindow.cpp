@@ -42,7 +42,9 @@ void MainWindow::on_pushButton_clicked()
     whenSaved.append(time.toString("hh:mm:ss"));
     ui->show->append(whenSaved);
 
-    QFile filewrite("Calendar.txt");
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Calendar"),"/Calendar",tr("Calendar (*.txt)"));
+
+    QFile filewrite(fileName);
     if(filewrite.open(QFile::WriteOnly | QFile::Truncate | QFile::Text))
     {
         QTextStream out (&filewrite);
@@ -59,7 +61,7 @@ void MainWindow::on_pushButton_clicked()
         out<<ui->textEdit->toPlainText()<<endl;
     }
 
-    QFile file("Calendar.txt");
+    QFile file(fileName);
     if(file.open(QIODevice::ReadOnly)){
         qDebug()<<"opening file";
 
@@ -116,14 +118,7 @@ void MainWindow::updateTime()
 void MainWindow::on_Load_clicked()
 {
     QString fileName;
-    fileName = QFileDialog::getOpenFileName(this, tr("Open Calendar"), "/home", tr("Calendar (*.txt)"));
-
-
-
-
-
-
-
+    fileName = QFileDialog::getOpenFileName(this, tr("Open Calendar"), "/Calendar", tr("Calendar (*.txt)"));
     QFile file(fileName);
     if(file.open(QIODevice::ReadOnly)){
         qDebug()<<"opening file";
