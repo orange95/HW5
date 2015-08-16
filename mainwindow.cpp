@@ -10,7 +10,7 @@
 #include "QVector"
 #include "QList"
 
-
+QString remindTime;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,11 +18,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-//    clock = new QTimer;
-//    clock ->setInterval(1000);
-//    connect(clock,SIGNAL(timeout()),this,SLOT(updateTime()));
-//    clock->start();
-//    codec = QTextCodec::codecForName("Big5");
+    clock = new QTimer;
+    clock ->setInterval(1000);
+    connect(clock,SIGNAL(timeout()),this,SLOT(updateTime()));
+
+    codec = QTextCodec::codecForName("Big5");
 
 }
 
@@ -34,7 +34,6 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     QString whenSaved="Saved at ";
-    QString remindTime;
     QDateTime time;
     time = time.currentDateTime();
     whenSaved.append(time.toString("hh:mm:ss"));
@@ -70,16 +69,26 @@ void MainWindow::on_pushButton_clicked()
     {
         qDebug()<<"Fail";
     }
-    if(time.toString("MM:dd:hh:mm") == remindTime)
+
+    clock->start();
+}
+
+
+void MainWindow::updateTime()
+{
+    QDateTime date;
+    date = date.currentDateTime();
+
+    if(date.toString("MM:dd:hh:mm") == remindTime)
     {
         qDebug()<<"yes";
-    qDebug()<<time.toString("MM:dd:hh:mm");
+    qDebug()<<date.toString("MM:dd:hh:mm");
     qDebug()<<remindTime;}
     else
     {
         qDebug()<<"No";
-    qDebug()<<time.toString("MM:dd:hh:mm");
+    qDebug()<<date.toString("MM:dd:hh:mm");
         qDebug()<<remindTime;
     }
-
 }
+
